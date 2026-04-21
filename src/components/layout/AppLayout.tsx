@@ -2,7 +2,7 @@ import { Outlet, Navigate } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { useAuth } from '@/lib/AuthContext';
-import { Toaster } from '@/components/common/sonner';
+import { Toaster } from '@/components/common/app-sonner';
 
 export const AppLayout = () => {
   const { user, loading } = useAuth();

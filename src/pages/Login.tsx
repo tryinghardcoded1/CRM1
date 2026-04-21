@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
-import { Button } from '@/components/common/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/common/card';
+import { Button } from '@/components/common/app-button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/common/app-card';
 import { Navigate } from 'react-router-dom';
-import { Input } from '@/components/common/input';
-import { Label } from '@/components/common/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/common/tabs';
+import { Input } from '@/components/common/app-input';
+import { Label } from '@/components/common/app-label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/common/app-tabs';
 import { toast } from 'sonner';
 
 export default function Login() {

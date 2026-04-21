@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
 import { SalesAgent } from '@/lib/gemini';
 import { useAuth } from '@/lib/AuthContext';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/common/card';
-import { Input } from '@/components/common/input';
-import { Button } from '@/components/common/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/common/app-card';
+import { Input } from '@/components/common/app-input';
+import { Button } from '@/components/common/app-button';
 import { Send, Bot, User as UserIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

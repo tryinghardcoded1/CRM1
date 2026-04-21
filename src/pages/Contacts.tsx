@@ -3,11 +3,11 @@ import { subscribeToContacts, createContact, deleteContact } from '@/lib/db';
 import { useAuth } from '@/lib/AuthContext';
 import { Contact } from '@/types';
 import { format } from 'date-fns';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/common/card';
-import { Button } from '@/components/common/button';
-import { Input } from '@/components/common/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/common/table';
-import { Label } from '@/components/common/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/common/app-card';
+import { Button } from '@/components/common/app-button';
+import { Input } from '@/components/common/app-input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/common/app-table';
+import { Label } from '@/components/common/app-label';
 import { Trash2 } from 'lucide-react';
 
 export default function Contacts() {

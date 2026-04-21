@@ -3,8 +3,8 @@ import { subscribeToLeads, updateLeadStage } from '@/lib/db';
 import { useAuth } from '@/lib/AuthContext';
 import { Lead, PipelineStage } from '@/types';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
-import { Card, CardContent } from '@/components/common/card';
-import { Badge } from '@/components/common/badge';
+import { Card, CardContent } from '@/components/common/app-card';
+import { Badge } from '@/components/common/app-badge';
 import { format } from 'date-fns';
 
 const STAGES: PipelineStage[] = [
