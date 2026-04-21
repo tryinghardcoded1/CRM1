@@ -3,9 +3,9 @@ import { subscribeToLeads } from '@/lib/db';
 import { useAuth } from '@/lib/AuthContext';
 import { Lead } from '@/types';
 import { format } from 'date-fns';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/common/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/common/card';
+import { Button } from '@/components/common/button';
 import { Link } from 'react-router-dom';
 import {
   Table,
@@ -14,7 +14,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/common/table';
 
 export default function Dashboard() {
   const { user } = useAuth();

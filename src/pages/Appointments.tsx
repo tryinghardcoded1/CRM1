@@ -3,13 +3,13 @@ import { subscribeToAppointments, createAppointment, deleteAppointment, updateAp
 import { useAuth } from '@/lib/AuthContext';
 import { Appointment, AppointmentStatus } from '@/types';
 import { format } from 'date-fns';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/common/card';
+import { Button } from '@/components/common/button';
+import { Input } from '@/components/common/input';
+import { Label } from '@/components/common/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/common/select';
 import { Calendar, Clock, Trash2 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/components/common/badge';
 
 export default function Appointments() {
   const { user } = useAuth();

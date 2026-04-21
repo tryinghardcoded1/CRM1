@@ -1,6 +1,6 @@
 import { useAuth } from '@/lib/AuthContext';
 import { Bell, Search } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/common/input';
 
 export const Header = () => {
   const { user } = useAuth();
