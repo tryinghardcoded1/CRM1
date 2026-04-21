@@ -25,3 +25,28 @@ export interface Task {
   status: TaskStatus;
   createdAt: number;
 }
+
+export interface Contact {
+  id?: string;
+  userId: string;
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  notes: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export type AppointmentStatus = "Scheduled" | "Completed" | "Cancelled";
+
+export interface Appointment {
+  id?: string;
+  userId: string;
+  title: string;
+  date: number; // timestamp
+  contactId?: string; // Optional link to a contact
+  leadId?: string; // Optional link to a lead
+  status: AppointmentStatus;
+  createdAt: number;
+}

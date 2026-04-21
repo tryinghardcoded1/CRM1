@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard';
 import Pipeline from './pages/Pipeline';
 import Chat from './pages/Chat';
 import Tasks from './pages/Tasks';
+import Contacts from './pages/Contacts';
+import Appointments from './pages/Appointments';
 
 export default function App() {
   return (
@@ -17,6 +19,8 @@ export default function App() {
             <Route index element={<Dashboard />} />
             <Route path="pipeline" element={<Pipeline />} />
             <Route path="tasks" element={<Tasks />} />
+            <Route path="contacts" element={<Contacts />} />
+            <Route path="appointments" element={<Appointments />} />
             <Route path="chat" element={<Chat />} />
           </Route>
         </Routes>

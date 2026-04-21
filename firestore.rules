@@ -46,6 +46,29 @@ service cloud.firestore {
         && (data.createdAt is timestamp || data.createdAt is number);
     }
 
+    function isValidContact(data) {
+      return data.keys().hasAll(['userId', 'name', 'email', 'phone', 'company', 'notes', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && data.name is string && data.name.size() <= 200
+        && data.email is string && data.email.size() <= 200
+        && data.phone is string && data.phone.size() <= 50
+        && data.company is string && data.company.size() <= 200
+        && data.notes is string && data.notes.size() <= 2000
+        && (data.createdAt is timestamp || data.createdAt is number)
+        && (data.updatedAt is timestamp || data.updatedAt is number);
+    }
+
+    function isValidAppointment(data) {
+      return data.keys().hasAll(['userId', 'title', 'date', 'status', 'createdAt'])
+        && data.userId == request.auth.uid
+        && data.title is string && data.title.size() <= 200
+        && (data.date is timestamp || data.date is number)
+        && data.status is string && data.status.size() <= 50
+        && (data.get('contactId', '') is string)
+        && (data.get('leadId', '') is string)
+        && (data.createdAt is timestamp || data.createdAt is number);
+    }
+
     match /leads/{leadId} {
       allow get: if isSignedIn() && existing().userId == request.auth.uid && isValidId(leadId);
       allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
@@ -70,6 +93,22 @@ service cloud.firestore {
       allow create: if isSignedIn() && isValidId(taskId) && isValidTask(incoming());
       allow update: if isSignedIn() && isValidId(taskId) && existing().userId == request.auth.uid && incoming().userId == existing().userId && isValidTask(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'text']);
       allow delete: if isSignedIn() && isValidId(taskId) && existing().userId == request.auth.uid;
+    }
+
+    match /contacts/{contactId} {
+      allow get: if isSignedIn() && existing().userId == request.auth.uid && isValidId(contactId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(contactId) && isValidContact(incoming());
+      allow update: if isSignedIn() && isValidId(contactId) && existing().userId == request.auth.uid && incoming().userId == existing().userId && isValidContact(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'email', 'phone', 'company', 'notes', 'updatedAt']);
+      allow delete: if isSignedIn() && isValidId(contactId) && existing().userId == request.auth.uid;
+    }
+
+    match /appointments/{appointmentId} {
+      allow get: if isSignedIn() && existing().userId == request.auth.uid && isValidId(appointmentId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(appointmentId) && isValidAppointment(incoming());
+      allow update: if isSignedIn() && isValidId(appointmentId) && existing().userId == request.auth.uid && incoming().userId == existing().userId && isValidAppointment(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'date', 'status', 'contactId', 'leadId']);
+      allow delete: if isSignedIn() && isValidId(appointmentId) && existing().userId == request.auth.uid;
     }
   }
 }

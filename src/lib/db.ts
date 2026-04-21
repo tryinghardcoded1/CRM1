@@ -1,6 +1,6 @@
 import { collection, addDoc, updateDoc, doc, onSnapshot, query, where, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from './firebase';
-import { Lead, PipelineStage, Task, TaskStatus } from '../types';
+import { Lead, PipelineStage, Task, TaskStatus, Contact, Appointment, AppointmentStatus } from '../types';
 import { toast } from 'sonner';
 
 interface FirestoreErrorInfo {
@@ -144,4 +144,69 @@ export const subscribeToTasks = (userId: string, callback: (tasks: Task[]) => vo
     tasks.sort((a, b) => b.createdAt - a.createdAt);
     callback(tasks);
   }, errorCallback);
+};
+
+// Contacts Management functions
+export const createContact = async (contactData: Omit<Contact, 'id'>, user: any) => {
+  try {
+    const contactsRef = collection(db, 'contacts');
+    const docRef = await addDoc(contactsRef, contactData);
+    return docRef.id;
+  } catch (error) {
+    handleFirestoreError(error, 'create', 'contacts', user);
+  }
+};
+
+export const subscribeToContacts = (userId: string, callback: (contacts: Contact[]) => void, errorCallback: (error: any) => void) => {
+  const q = query(collection(db, 'contacts'), where('userId', '==', userId));
+  return onSnapshot(q, (snapshot) => {
+    const contacts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Contact));
+    contacts.sort((a, b) => b.createdAt - a.createdAt);
+    callback(contacts);
+  }, errorCallback);
+};
+
+export const deleteContact = async (contactId: string, user: any) => {
+  try {
+    await deleteDoc(doc(db, 'contacts', contactId));
+  } catch (error) {
+     handleFirestoreError(error, 'delete', `contacts/${contactId}`, user);
+  }
+};
+
+// Appointments Management functions
+export const createAppointment = async (apptData: Omit<Appointment, 'id'>, user: any) => {
+  try {
+    const apptsRef = collection(db, 'appointments');
+    const docRef = await addDoc(apptsRef, apptData);
+    return docRef.id;
+  } catch (error) {
+    handleFirestoreError(error, 'create', 'appointments', user);
+  }
+};
+
+export const updateAppointmentStatus = async (apptId: string, status: AppointmentStatus, user: any) => {
+  try {
+    const apptRef = doc(db, 'appointments', apptId);
+    await updateDoc(apptRef, { status });
+  } catch (error) {
+    handleFirestoreError(error, 'update', `appointments/${apptId}`, user);
+  }
+};
+
+export const subscribeToAppointments = (userId: string, callback: (appointments: Appointment[]) => void, errorCallback: (error: any) => void) => {
+  const q = query(collection(db, 'appointments'), where('userId', '==', userId));
+  return onSnapshot(q, (snapshot) => {
+    const appts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Appointment));
+    appts.sort((a, b) => b.date - a.date);
+    callback(appts);
+  }, errorCallback);
+};
+
+export const deleteAppointment = async (apptId: string, user: any) => {
+  try {
+    await deleteDoc(doc(db, 'appointments', apptId));
+  } catch (error) {
+     handleFirestoreError(error, 'delete', `appointments/${apptId}`, user);
+  }
 };
