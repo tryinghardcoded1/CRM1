@@ -1,0 +1,6 @@
+{
+  "name": "CRM",
+  "description": "A working CRM demo system with an AI sales assistant for lead generation, pipeline tracking, and webhook integration readiness, similar to GoHighLevel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidLead(data) {
+      // Validate schema
+      return data.keys().hasAll(['userId', 'name', 'phone', 'pipeline_stage', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid // Must assign lead to themselves
+        && data.name is string && data.name.size() <= 200
+        && data.phone is string && data.phone.size() <= 50
+        && data.pipeline_stage is string && data.pipeline_stage.size() <= 50
+        && (data.get('vehicle_interest', '') is string)
+        && (data.get('budget', '') is string)
+        && (data.get('timeline', '') is string)
+        && (data.get('payment_type', '') is string)
+        && (data.get('status', '') is string)
+        && (data.createdAt is timestamp || data.createdAt is number)
+        && (data.updatedAt is timestamp || data.updatedAt is number);
+    }
+
+    function isValidTask(data) {
+      return data.keys().hasAll(['userId', 'leadId', 'text', 'status', 'createdAt'])
+        && data.userId == request.auth.uid
+        && data.text is string && data.text.size() <= 1000
+        && data.leadId is string && data.leadId.size() <= 128
+        && data.status is string && data.status.size() <= 50
+        && (data.createdAt is timestamp || data.createdAt is number);
+    }
+
+    match /leads/{leadId} {
+      allow get: if isSignedIn() && existing().userId == request.auth.uid && isValidId(leadId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      
+      allow create: if isSignedIn() 
+        && isValidId(leadId) 
+        && isValidLead(incoming());
+
+      allow update: if isSignedIn()
+        && isValidId(leadId)
+        && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId // Immutable userId
+        && isValidLead(incoming())
+        && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'phone', 'vehicle_interest', 'budget', 'timeline', 'payment_type', 'status', 'pipeline_stage', 'updatedAt']);
+
+      allow delete: if isSignedIn() && isValidId(leadId) && existing().userId == request.auth.uid;
+    }
+
+    match /tasks/{taskId} {
+      allow get: if isSignedIn() && existing().userId == request.auth.uid && isValidId(taskId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(taskId) && isValidTask(incoming());
+      allow update: if isSignedIn() && isValidId(taskId) && existing().userId == request.auth.uid && incoming().userId == existing().userId && isValidTask(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'text']);
+      allow delete: if isSignedIn() && isValidId(taskId) && existing().userId == request.auth.uid;
+    }
+  }
+}
